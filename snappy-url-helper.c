@@ -13,6 +13,8 @@ static const gchar introspection_xml[] =
   "  </interface>"
   "</node>";
 
+static GMainLoop *loop;
+
 static void
 handle_method_call (GDBusConnection       *connection,
                     const gchar           *sender,
@@ -59,14 +61,13 @@ on_name_lost (GDBusConnection *connection,
               const gchar     *name,
               gpointer         user_data)
 {
-  exit (1);
+  g_main_loop_quit (loop);
 }
 
 int
 main (int argc, char *argv[])
 {
   guint owner_id;
-  GMainLoop *loop;
 
   introspection_data = g_dbus_node_info_new_for_xml (introspection_xml, NULL);
   g_assert (introspection_data != NULL);
