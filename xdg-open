@@ -1,0 +1,4 @@
+#!/bin/sh
+
+gdbus call --session --dest com.canonical.SnappyUrlHelper --object-path / --method com.canonical.SnappyUrlHelper.XdgOpen "$1"
+
