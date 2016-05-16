@@ -13,6 +13,8 @@ static const gchar introspection_xml[] =
   "  </interface>"
   "</node>";
 
+static GMainLoop *loop;
+
 static void
 handle_method_call (GDBusConnection       *connection,
                     const gchar           *sender,
@@ -23,15 +25,36 @@ handle_method_call (GDBusConnection       *connection,
                     GDBusMethodInvocation *invocation,
                     gpointer               user_data)
 {
+  const gchar * const whitelist[] = {
+    "http",
+    "https",
+    "mailto",
+    NULL
+  };
+
   if (g_strcmp0 (method_name, "XdgOpen") == 0)
     {
       const gchar *url;
+      gchar *scheme;
 
       g_variant_get (parameters, "(&s)", &url);
+      scheme = g_uri_parse_scheme (url);
 
-      g_app_info_launch_default_for_uri (url, NULL, NULL);
+      if (g_strv_contains (whitelist, scheme))
+        {
+          g_app_info_launch_default_for_uri (url, NULL, NULL);
 
-      g_dbus_method_invocation_return_value (invocation, NULL);
+          g_dbus_method_invocation_return_value (invocation, NULL);
+        }
+      else
+        {
+          g_dbus_method_invocation_return_error (invocation,
+                                                 G_DBUS_ERROR,
+                                                 G_DBUS_ERROR_ACCESS_DENIED,
+                                                 "cannot open scheme: %s", scheme);
+        }
+
+      g_free (scheme);
     }
 }
 
@@ -59,14 +82,13 @@ on_name_lost (GDBusConnection *connection,
               const gchar     *name,
               gpointer         user_data)
 {
-  exit (1);
+  g_main_loop_quit (loop);
 }
 
 int
 main (int argc, char *argv[])
 {
   guint owner_id;
-  GMainLoop *loop;
 
   introspection_data = g_dbus_node_info_new_for_xml (introspection_xml, NULL);
   g_assert (introspection_data != NULL);
