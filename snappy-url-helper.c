@@ -25,15 +25,36 @@ handle_method_call (GDBusConnection       *connection,
                     GDBusMethodInvocation *invocation,
                     gpointer               user_data)
 {
+  const gchar * const whitelist[] = {
+    "http",
+    "https",
+    "mailto",
+    NULL
+  };
+
   if (g_strcmp0 (method_name, "XdgOpen") == 0)
     {
       const gchar *url;
+      gchar *scheme;
 
       g_variant_get (parameters, "(&s)", &url);
+      scheme = g_uri_parse_scheme (url);
 
-      g_app_info_launch_default_for_uri (url, NULL, NULL);
+      if (g_strv_contains (whitelist, scheme))
+        {
+          g_app_info_launch_default_for_uri (url, NULL, NULL);
 
-      g_dbus_method_invocation_return_value (invocation, NULL);
+          g_dbus_method_invocation_return_value (invocation, NULL);
+        }
+      else
+        {
+          g_dbus_method_invocation_return_error (invocation,
+                                                 G_DBUS_ERROR,
+                                                 G_DBUS_ERROR_ACCESS_DENIED,
+                                                 "cannot open scheme: %s", scheme);
+        }
+
+      g_free (scheme);
     }
 }
 
