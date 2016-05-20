@@ -6,8 +6,8 @@ static GDBusNodeInfo *introspection_data = NULL;
 /* Introspection data for the service we are exporting */
 static const gchar introspection_xml[] =
   "<node>"
-  "  <interface name='com.canonical.SnappyUrlHelper'>"
-  "    <method name='XdgOpen'>"
+  "  <interface name='com.canonical.SafeLauncher'>"
+  "    <method name='OpenURL'>"
   "      <arg type='s' name='url' direction='in'/>"
   "    </method>"
   "  </interface>"
@@ -32,7 +32,7 @@ handle_method_call (GDBusConnection       *connection,
     NULL
   };
 
-  if (g_strcmp0 (method_name, "XdgOpen") == 0)
+  if (g_strcmp0 (method_name, "OpenURL") == 0)
     {
       const gchar *url;
       gchar *scheme;
@@ -94,7 +94,7 @@ main (int argc, char *argv[])
   g_assert (introspection_data != NULL);
 
   owner_id = g_bus_own_name (G_BUS_TYPE_SESSION,
-                             "com.canonical.SnappyUrlHelper",
+                             "com.canonical.SafeLauncher",
                              G_BUS_NAME_OWNER_FLAGS_NONE,
                              on_bus_acquired,
                              NULL,

@@ -1,4 +1,4 @@
 #!/bin/sh
 
-dbus-send  --print-reply --session --dest=com.canonical.SnappyUrlHelper / com.canonical.SnappyUrlHelper.XdgOpen string:"$1"
+dbus-send  --print-reply --session --dest=com.canonical.SafeLauncher / com.canonical.SafeLauncher.OpenURL string:"$1"
 
