@@ -42,7 +42,14 @@ handle_method_call (GDBusConnection       *connection,
       g_variant_get (parameters, "(&s)", &url);
       scheme = g_uri_parse_scheme (url);
 
-      if (g_strv_contains (whitelist, scheme))
+      if (scheme == NULL)
+        {
+          g_dbus_method_invocation_return_error (invocation,
+                                                 G_DBUS_ERROR,
+                                                 G_DBUS_ERROR_INVALID_ARGS,
+                                                 "unknown scheme: %s", url);
+        }
+      else if (g_strv_contains (whitelist, scheme))
         {
           if (g_app_info_launch_default_for_uri (url, NULL, &error))
             g_dbus_method_invocation_return_value (invocation, NULL);
@@ -56,7 +63,7 @@ handle_method_call (GDBusConnection       *connection,
         {
           g_dbus_method_invocation_return_error (invocation,
                                                  G_DBUS_ERROR,
-                                                 G_DBUS_ERROR_ACCESS_DENIED,
+                                                 G_DBUS_ERROR_INVALID_ARGS,
                                                  "cannot open scheme: %s", scheme);
         }
 
