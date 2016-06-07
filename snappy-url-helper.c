@@ -25,6 +25,8 @@ handle_method_call (GDBusConnection       *connection,
                     GDBusMethodInvocation *invocation,
                     gpointer               user_data)
 {
+  GError *error = NULL;
+
   const gchar * const whitelist[] = {
     "http",
     "https",
@@ -42,9 +44,13 @@ handle_method_call (GDBusConnection       *connection,
 
       if (g_strv_contains (whitelist, scheme))
         {
-          g_app_info_launch_default_for_uri (url, NULL, NULL);
-
-          g_dbus_method_invocation_return_value (invocation, NULL);
+          if (g_app_info_launch_default_for_uri (url, NULL, &error))
+            g_dbus_method_invocation_return_value (invocation, NULL);
+          else
+            {
+              g_dbus_method_invocation_return_gerror (invocation, error);
+              g_clear_error (&error);
+            }
         }
       else
         {
