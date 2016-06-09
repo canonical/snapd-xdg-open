@@ -1,9 +1,9 @@
-libexec_PROGRAMS = snappy-url-helper
+libexec_PROGRAMS = snapd-xdg-open
 noinst_PROGRAMS = xdg-open
 
-snappy_url_helper_SOURCES = snappy-url-helper.c
-snappy_url_helper_CFLAGS = $(GIO_CFLAGS)
-snappy_url_helper_LDADD = $(GIO_LIBS)
+snapd_xdg_open_SOURCES = snapd-xdg-open.c
+snapd_xdg_open_CFLAGS = $(GIO_CFLAGS)
+snapd_xdg_open_LDADD = $(GIO_LIBS)
 
 xdg_open_SOURCES = xdg-open.c
 xdg_open_CFLAGS = $(GIO_CFLAGS)

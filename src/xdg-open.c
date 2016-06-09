@@ -23,9 +23,9 @@ main (int   argc,
     }
 
   result = g_dbus_connection_call_sync (bus,
-                                        "com.canonical.SafeLauncher",
+                                        "com.canonical.SnapdXDGOpen",
                                         "/",
-                                        "com.canonical.SafeLauncher",
+                                        "com.canonical.SnapdXDGOpen",
                                         "OpenURL",
                                         g_variant_new ("(s)", argv[1]),
                                         G_VARIANT_TYPE_UNIT,

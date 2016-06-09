@@ -1,8 +1,8 @@
 AC_PREREQ([2.69])
-AC_INIT([snap-desktop-links], [0.0.0])
+AC_INIT([snapd-xdg-open], [0.0.0])
 
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_SRCDIR([src/snappy-url-helper.c])
+AC_CONFIG_SRCDIR([src/snapd-xdg-open.c])
 
 AM_INIT_AUTOMAKE
 

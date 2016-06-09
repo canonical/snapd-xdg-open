@@ -10,10 +10,10 @@ Makefile.in
 /config.log
 /config.status
 /configure
-/data/com.canonical.SafeLauncher.service
+/data/com.canonical.SnapdXDGOpen.service
 /depcomp
 /install-sh
 /m4
 /missing
-/src/snappy-url-helper
+/src/snapd-xdg-open
 /src/xdg-open
