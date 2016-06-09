@@ -10,7 +10,7 @@ Makefile.in
 /config.log
 /config.status
 /configure
-/data/com.canonical.SnapdXDGOpen.service
+/data/com.canonical.SafeLauncher.service
 /depcomp
 /install-sh
 /m4

@@ -25,7 +25,7 @@ static GDBusNodeInfo *introspection_data = NULL;
 /* Introspection data for the service we are exporting */
 static const gchar introspection_xml[] =
   "<node>"
-  "  <interface name='com.canonical.SnapdXDGOpen'>"
+  "  <interface name='com.canonical.SafeLauncher'>"
   "    <method name='OpenURL'>"
   "      <arg type='s' name='url' direction='in'/>"
   "    </method>"
@@ -126,7 +126,7 @@ main (int argc, char *argv[])
   g_assert (introspection_data != NULL);
 
   owner_id = g_bus_own_name (G_BUS_TYPE_SESSION,
-                             "com.canonical.SnapdXDGOpen",
+                             "com.canonical.SafeLauncher",
                              G_BUS_NAME_OWNER_FLAGS_NONE,
                              on_bus_acquired,
                              NULL,
