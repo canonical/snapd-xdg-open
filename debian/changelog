@@ -1,0 +1,5 @@
+snapd-xdg-open (0.0.0-1) unstable; urgency=medium
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Ubuntu Desktop Team <ubuntu-desktop@lists.ubuntu.com>  Fri, 10 Jun 2016 10:32:54 -0400
