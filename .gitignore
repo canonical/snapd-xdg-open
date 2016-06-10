@@ -11,6 +11,13 @@ Makefile.in
 /config.status
 /configure
 /data/com.canonical.SafeLauncher.service
+/debian/autoreconf.after
+/debian/autoreconf.before
+/debian/debhelper-build-stamp
+/debian/files
+/debian/snapd-xdg-open.debhelper.log
+/debian/snapd-xdg-open.substvars
+/debian/snapd-xdg-open
 /depcomp
 /install-sh
 /m4
