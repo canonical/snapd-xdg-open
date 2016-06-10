@@ -1,15 +1,16 @@
 Source: snapd-xdg-open
-Section: unknown
+Section: utils
 Priority: optional
 Maintainer: Ubuntu Desktop Team <ubuntu-desktop@lists.ubuntu.com>
 Build-Depends: debhelper (>=9),autotools-dev
 Standards-Version: 3.9.6
-Homepage: <insert the upstream URL, if relevant>
+Homepage: https://github.com/ubuntu-core/snap-desktop-links
 #Vcs-Git: git://anonscm.debian.org/collab-maint/snapd-xdg-open.git
 #Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/snapd-xdg-open.git
 
 Package: snapd-xdg-open
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Description: Opens URLs via D-Bus
+ A D-Bus-activatable helper service allowing snaps to launch URLs on
+ the host where its installed.
