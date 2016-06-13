@@ -1,3 +1,22 @@
+/*
+ * snapd-xdg-open
+ *
+ * Copyright (C) 2016 Canonical Ltd.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+
 #include <gio/gio.h>
 #include <stdlib.h>
 
@@ -25,6 +44,8 @@ handle_method_call (GDBusConnection       *connection,
                     GDBusMethodInvocation *invocation,
                     gpointer               user_data)
 {
+  GError *error = NULL;
+
   const gchar * const whitelist[] = {
     "http",
     "https",
@@ -40,17 +61,28 @@ handle_method_call (GDBusConnection       *connection,
       g_variant_get (parameters, "(&s)", &url);
       scheme = g_uri_parse_scheme (url);
 
-      if (g_strv_contains (whitelist, scheme))
+      if (scheme == NULL)
         {
-          g_app_info_launch_default_for_uri (url, NULL, NULL);
-
-          g_dbus_method_invocation_return_value (invocation, NULL);
+          g_dbus_method_invocation_return_error (invocation,
+                                                 G_DBUS_ERROR,
+                                                 G_DBUS_ERROR_INVALID_ARGS,
+                                                 "unknown scheme: %s", url);
+        }
+      else if (g_strv_contains (whitelist, scheme))
+        {
+          if (g_app_info_launch_default_for_uri (url, NULL, &error))
+            g_dbus_method_invocation_return_value (invocation, NULL);
+          else
+            {
+              g_dbus_method_invocation_return_gerror (invocation, error);
+              g_clear_error (&error);
+            }
         }
       else
         {
           g_dbus_method_invocation_return_error (invocation,
                                                  G_DBUS_ERROR,
-                                                 G_DBUS_ERROR_ACCESS_DENIED,
+                                                 G_DBUS_ERROR_INVALID_ARGS,
                                                  "cannot open scheme: %s", scheme);
         }
 

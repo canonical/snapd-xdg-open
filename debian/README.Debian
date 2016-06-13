@@ -1,0 +1,7 @@
+snapd-xdg-open for Debian
+------------------------
+
+This package is meant to be installed on the host system so that snaps
+can call xdg-open outside of the sandbox.
+
+ -- Ubuntu Desktop Team <ubuntu-desktop@lists.ubuntu.com>  Fri, 10 Jun 2016 10:32:54 -0400
