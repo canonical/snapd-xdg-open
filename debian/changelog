@@ -1,4 +1,4 @@
-snapd-xdg-open (0.0.0) xenial; urgency=medium
+snapd-xdg-open (0.0.0) yakkety; urgency=medium
 
   * Initial release
 
