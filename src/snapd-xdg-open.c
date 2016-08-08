@@ -46,13 +46,6 @@ handle_method_call (GDBusConnection       *connection,
 {
   GError *error = NULL;
 
-  const gchar * const whitelist[] = {
-    "http",
-    "https",
-    "mailto",
-    NULL
-  };
-
   if (g_strcmp0 (method_name, "OpenURL") == 0)
     {
       const gchar *url;
@@ -68,22 +61,14 @@ handle_method_call (GDBusConnection       *connection,
                                                  G_DBUS_ERROR_INVALID_ARGS,
                                                  "unknown scheme: %s", url);
         }
-      else if (g_strv_contains (whitelist, scheme))
+      else if (g_app_info_launch_default_for_uri (url, NULL, &error))
         {
-          if (g_app_info_launch_default_for_uri (url, NULL, &error))
-            g_dbus_method_invocation_return_value (invocation, NULL);
-          else
-            {
-              g_dbus_method_invocation_return_gerror (invocation, error);
-              g_clear_error (&error);
-            }
+          g_dbus_method_invocation_return_value (invocation, NULL);
         }
       else
         {
-          g_dbus_method_invocation_return_error (invocation,
-                                                 G_DBUS_ERROR,
-                                                 G_DBUS_ERROR_INVALID_ARGS,
-                                                 "cannot open scheme: %s", scheme);
+          g_dbus_method_invocation_return_gerror (invocation, error);
+          g_clear_error (&error);
         }
 
       g_free (scheme);
