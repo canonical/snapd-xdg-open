@@ -34,6 +34,24 @@ static const gchar introspection_xml[] =
 
 static GMainLoop *loop;
 
+#ifndef GLIB_VERSION_2_44
+gboolean
+g_strv_contains (const gchar * const *strv,
+                 const gchar         *str)
+{
+  g_return_val_if_fail (strv != NULL, FALSE);
+  g_return_val_if_fail (str != NULL, FALSE);
+
+  for (; *strv != NULL; strv++)
+    {
+      if (g_str_equal (str, *strv))
+        return TRUE;
+    }
+
+  return FALSE;
+}
+#endif
+
 static void
 handle_method_call (GDBusConnection       *connection,
                     const gchar           *sender,
