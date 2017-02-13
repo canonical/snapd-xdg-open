@@ -26,12 +26,12 @@ main (int   argc,
   GDBusConnection *bus = NULL;
   GVariant *result = NULL;
   GError *error = NULL;
-  int ret = 0;
+  int retval = 0;
 
   if (argc != 2)
     {
       g_printerr ("syntax: %s <url>\n", argv[0]);
-      ret = 1;
+      retval = 1;
       goto out;
     }
 
@@ -40,7 +40,7 @@ main (int   argc,
   if (bus == NULL)
     {
       g_printerr ("error: %s\n", error->message);
-      ret = 1;
+      retval = 1;
       goto out;
     }
 
@@ -59,7 +59,7 @@ main (int   argc,
   if (result == NULL)
     {
       g_printerr ("error: %s\n", error->message);
-      ret = 1;
+      retval = 1;
       goto out;
     }
 
@@ -68,5 +68,5 @@ out:
   g_clear_object (&result);
   g_clear_object (&error);
 
-  return 0;
+  return retval;
 }
