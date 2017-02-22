@@ -34,6 +34,21 @@ static const gchar introspection_xml[] =
 
 static GMainLoop *loop;
 
+static gboolean
+strv_contains(const gchar * const *strv,
+              const gchar *str)
+{
+  char * const *iterator = strv;
+  while (iterator && *iterator)
+    {
+      if (g_strcmp0(*iterator, str) == 0)
+        return TRUE;
+      iterator++;
+    }
+
+  return FALSE;
+}
+
 static void
 handle_method_call (GDBusConnection       *connection,
                     const gchar           *sender,
@@ -68,7 +83,7 @@ handle_method_call (GDBusConnection       *connection,
                                                  G_DBUS_ERROR_INVALID_ARGS,
                                                  "unknown scheme: %s", url);
         }
-      else if (g_strv_contains (whitelist, scheme))
+      else if (strv_contains (whitelist, scheme))
         {
           if (g_app_info_launch_default_for_uri (url, NULL, &error))
             g_dbus_method_invocation_return_value (invocation, NULL);

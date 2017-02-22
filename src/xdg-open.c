@@ -23,9 +23,10 @@ int
 main (int   argc,
       char *argv[])
 {
-  g_autoptr(GDBusConnection) bus = NULL;
-  g_autoptr(GVariant) result = NULL;
-  g_autoptr(GError) error = NULL;
+  int rc = 0;
+  GDBusConnection* bus = NULL;
+  GVariant* result = NULL;
+  GError* error = NULL;
 
   if (argc != 2)
     {
@@ -53,11 +54,19 @@ main (int   argc,
                                         NULL,
                                         &error);
 
+  g_object_unref(bus);
+
   if (result == NULL)
     {
       g_printerr ("error: %s\n", error->message);
-      return 1;
+      g_error_free(error);
+      rc = 1;
+    }
+  else
+    {
+      g_variant_unref(result);
+      rc = 0;
     }
 
-  return 0;
+  return rc;
 }
