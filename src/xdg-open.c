@@ -23,14 +23,16 @@ int
 main (int   argc,
       char *argv[])
 {
-  g_autoptr(GDBusConnection) bus = NULL;
-  g_autoptr(GVariant) result = NULL;
-  g_autoptr(GError) error = NULL;
+  GDBusConnection *bus = NULL;
+  GVariant *result = NULL;
+  GError *error = NULL;
+  int retval = 0;
 
   if (argc != 2)
     {
       g_printerr ("syntax: %s <url>\n", argv[0]);
-      return 1;
+      retval = 1;
+      goto out;
     }
 
   bus = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
@@ -38,7 +40,8 @@ main (int   argc,
   if (bus == NULL)
     {
       g_printerr ("error: %s\n", error->message);
-      return 1;
+      retval = 1;
+      goto out;
     }
 
   result = g_dbus_connection_call_sync (bus,
@@ -56,8 +59,14 @@ main (int   argc,
   if (result == NULL)
     {
       g_printerr ("error: %s\n", error->message);
-      return 1;
+      retval = 1;
+      goto out;
     }
 
-  return 0;
+out:
+  g_clear_object (&bus);
+  g_clear_object (&result);
+  g_clear_object (&error);
+
+  return retval;
 }
