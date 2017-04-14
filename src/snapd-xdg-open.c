@@ -65,6 +65,7 @@ handle_method_call (GDBusConnection       *connection,
   GError *error = NULL;
 
   const gchar * const whitelist[] = {
+    "help",
     "http",
     "https",
     "mailto",
