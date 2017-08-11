@@ -65,8 +65,8 @@ main (int   argc,
 
 out:
   g_clear_object (&bus);
-  g_clear_object (&result);
-  g_clear_object (&error);
+  g_variant_unref (result);
+  g_clear_error (&error);
 
   return retval;
 }
