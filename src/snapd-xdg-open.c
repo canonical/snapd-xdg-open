@@ -52,6 +52,37 @@ g_strv_contains (const gchar * const *strv,
 }
 #endif
 
+static gboolean
+is_scheme_ok(const gchar *scheme)
+{
+  const gchar * const whitelist[] = {
+    "http",
+    "https",
+    "mailto",
+    NULL
+  };
+  gboolean result;
+
+  if (g_strv_contains(whitelist, scheme))
+    return TRUE;
+
+#ifdef ENABLE_WHITELIST_DIR
+  {
+    const gchar *user_config_dir;
+    gchar *scheme_config_dir;
+
+    user_config_dir = g_get_user_config_dir ();
+    scheme_config_dir = g_build_filename (user_config_dir, "snapd-xdg-open", "schemes", scheme, NULL);
+    result = g_file_test(scheme_config_dir, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR);
+    g_free(scheme_config_dir);
+  }
+#else
+  result = FALSE;
+#endif
+
+  return result;
+}
+
 static void
 handle_method_call (GDBusConnection       *connection,
                     const gchar           *sender,
@@ -63,13 +94,6 @@ handle_method_call (GDBusConnection       *connection,
                     gpointer               user_data)
 {
   GError *error = NULL;
-
-  const gchar * const whitelist[] = {
-    "http",
-    "https",
-    "mailto",
-    NULL
-  };
 
   if (g_strcmp0 (method_name, "OpenURL") == 0)
     {
@@ -86,7 +110,7 @@ handle_method_call (GDBusConnection       *connection,
                                                  G_DBUS_ERROR_INVALID_ARGS,
                                                  "unknown scheme: %s", url);
         }
-      else if (g_strv_contains (whitelist, scheme))
+      else if (is_scheme_ok(scheme))
         {
           if (g_app_info_launch_default_for_uri (url, NULL, &error))
             g_dbus_method_invocation_return_value (invocation, NULL);
