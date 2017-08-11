@@ -30,5 +30,8 @@ AC_SUBST([GIO_LIBS])
 
 # checks for system services
 
+AC_ARG_ENABLE([whitelist], AS_HELP_STRING([--enable-whitelist],[enable user-configurable URL scheme whitelist]))
+AS_IF( [ test "x$enable_whitelist" = "xyes"], [AC_DEFINE([ENABLE_WHITELIST_DIR],[1], [Enable URL scheme whitelist directory])])
+
 AC_CONFIG_FILES([Makefile data/Makefile src/Makefile])
 AC_OUTPUT
